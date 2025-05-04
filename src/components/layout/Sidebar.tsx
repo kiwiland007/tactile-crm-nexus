@@ -47,8 +47,8 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  // Logo for Maroc Tactile
-  const logoUrl = "https://maroctactile.com/wp-content/uploads/2022/06/logo-maroctactile-15-1.png";
+  // Updated logo URL for Racha Digital
+  const logoUrl = "/lovable-uploads/762fc921-3479-4e65-a5de-300d43e947e1.png";
 
   return (
     <div
@@ -57,8 +57,8 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}
     >
-      <div className="flex h-16 items-center border-b border-gray-200 px-6">
-        <img src={logoUrl} alt="Maroc Tactile" className="h-8" />
+      <div className="flex h-16 items-center border-b border-gray-200 px-6 bg-black">
+        <img src={logoUrl} alt="Racha Digital" className="h-8" />
       </div>
       
       <div className="flex-1 overflow-auto py-4 px-3">
@@ -132,7 +132,7 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
           </div>
           <div>
             <p className="text-sm font-medium">Admin Utilisateur</p>
-            <p className="text-xs text-gray-500">admin@maroctactile.com</p>
+            <p className="text-xs text-gray-500">admin@rachadigital.com</p>
           </div>
         </div>
       </div>

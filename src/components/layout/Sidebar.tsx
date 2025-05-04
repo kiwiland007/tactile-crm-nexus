@@ -101,7 +101,7 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
           />
           <SidebarItem 
             icon={MessageSquare} 
-            label="Chat Interne" 
+            label="Communication Interne" 
             href="/chat" 
             isActive={currentPath === "/chat"} 
           />

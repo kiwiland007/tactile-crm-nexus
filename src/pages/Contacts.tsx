@@ -38,7 +38,10 @@ import {
   UserPlus,
   Mail,
   Phone,
+  MessageSquare
 } from "lucide-react";
+import SocialMediaLeads from "@/components/contacts/SocialMediaLeads";
+import LeadDetails from "@/components/leads/LeadDetails";
 
 // Mock data
 const contacts = [
@@ -165,6 +168,8 @@ const getStatusLabel = (status: string) => {
 const Contacts = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentTab, setCurrentTab] = useState("all");
+  const [viewMode, setViewMode] = useState<"contacts" | "social">("contacts");
+  const [selectedLead, setSelectedLead] = useState<any>(null);
   
   // Filter contacts based on search query and tab
   const filteredContacts = contacts.filter(contact => {
@@ -182,145 +187,85 @@ const Contacts = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Clients & Prospects</h1>
-          <p className="text-muted-foreground">
-            Gérez vos contacts, suivez les interactions et les opportunités
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Filter className="mr-2 h-4 w-4" />
-            Filtres
-          </Button>
-          <Button>
-            <UserPlus className="mr-2 h-4 w-4" />
-            Nouveau Contact
-          </Button>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold">Clients & Prospects</h1>
+        <p className="text-muted-foreground">
+          Gérez vos contacts, suivez les interactions et les opportunités
+        </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row gap-4 justify-between">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Rechercher par nom, contact ou email..."
-                  className="pl-10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as "contacts" | "social")} className="w-full">
+          <div className="flex justify-between items-center">
+            <TabsList>
+              <TabsTrigger value="contacts">Liste des Contacts</TabsTrigger>
+              <TabsTrigger value="social">Leads Réseaux Sociaux</TabsTrigger>
+            </TabsList>
             <div className="flex gap-2">
-              <Button variant="outline" size="icon">
-                <SlidersHorizontal className="h-4 w-4" />
+              <Button variant="outline">
+                <Filter className="mr-2 h-4 w-4" />
+                Filtres
+              </Button>
+              <Button>
+                <UserPlus className="mr-2 h-4 w-4" />
+                Nouveau Contact
               </Button>
             </div>
           </div>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="all" onValueChange={setCurrentTab}>
-            <div className="flex justify-between items-center mb-4">
-              <TabsList>
-                <TabsTrigger value="all">Tous</TabsTrigger>
-                <TabsTrigger value="clients">Clients</TabsTrigger>
-                <TabsTrigger value="prospects">Prospects</TabsTrigger>
-              </TabsList>
-              <div className="text-sm text-muted-foreground">
-                {filteredContacts.length} contacts
+        </Tabs>
+      </div>
+
+      {viewMode === "contacts" && (
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row gap-4 justify-between">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    placeholder="Rechercher par nom, contact ou email..."
+                    className="pl-10"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="icon">
+                  <SlidersHorizontal className="h-4 w-4" />
+                </Button>
               </div>
             </div>
-            
-            <TabsContent value="all" className="m-0">
-              <div className="rounded-md border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nom</TableHead>
-                      <TableHead className="hidden md:table-cell">Contact</TableHead>
-                      <TableHead className="hidden lg:table-cell">Email</TableHead>
-                      <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
-                      <TableHead className="hidden sm:table-cell">Ville</TableHead>
-                      <TableHead>Statut</TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredContacts.map((contact) => (
-                      <TableRow key={contact.id}>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">{contact.name}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {contact.type === "client" ? "Client" : "Prospect"}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">{contact.contact}</TableCell>
-                        <TableCell className="hidden lg:table-cell">{contact.email}</TableCell>
-                        <TableCell className="hidden xl:table-cell">{contact.phone}</TableCell>
-                        <TableCell className="hidden sm:table-cell">{contact.city}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant="outline"
-                            className={getStatusBadgeClass(contact.status)}
-                          >
-                            {getStatusLabel(contact.status)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex gap-2 justify-end">
-                            <Button size="icon" variant="ghost">
-                              <Mail className="h-4 w-4" />
-                            </Button>
-                            <Button size="icon" variant="ghost">
-                              <Phone className="h-4 w-4" />
-                            </Button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button size="icon" variant="ghost">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Voir les détails</DropdownMenuItem>
-                                <DropdownMenuItem>Éditer</DropdownMenuItem>
-                                <DropdownMenuItem>Créer un devis</DropdownMenuItem>
-                                <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </TableCell>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="all" onValueChange={setCurrentTab}>
+              <div className="flex justify-between items-center mb-4">
+                <TabsList>
+                  <TabsTrigger value="all">Tous</TabsTrigger>
+                  <TabsTrigger value="clients">Clients</TabsTrigger>
+                  <TabsTrigger value="prospects">Prospects</TabsTrigger>
+                </TabsList>
+                <div className="text-sm text-muted-foreground">
+                  {filteredContacts.length} contacts
+                </div>
+              </div>
+              
+              <TabsContent value="all" className="m-0">
+                <div className="rounded-md border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nom</TableHead>
+                        <TableHead className="hidden md:table-cell">Contact</TableHead>
+                        <TableHead className="hidden lg:table-cell">Email</TableHead>
+                        <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
+                        <TableHead className="hidden sm:table-cell">Ville</TableHead>
+                        <TableHead>Statut</TableHead>
+                        <TableHead></TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="clients" className="m-0">
-              {/* Content for clients tab - identical structure but filtered */}
-              <div className="rounded-md border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nom</TableHead>
-                      <TableHead className="hidden md:table-cell">Contact</TableHead>
-                      <TableHead className="hidden lg:table-cell">Email</TableHead>
-                      <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
-                      <TableHead className="hidden sm:table-cell">Ville</TableHead>
-                      <TableHead>Statut</TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredContacts
-                      .filter((contact) => contact.type === "client")
-                      .map((contact) => (
+                    </TableHeader>
+                    <TableBody>
+                      {filteredContacts.map((contact) => (
                         <TableRow key={contact.id}>
                           <TableCell>
                             <div>
@@ -367,83 +312,177 @@ const Contacts = () => {
                           </TableCell>
                         </TableRow>
                       ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="prospects" className="m-0">
-              {/* Content for prospects tab - identical structure but filtered */}
-              <div className="rounded-md border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nom</TableHead>
-                      <TableHead className="hidden md:table-cell">Contact</TableHead>
-                      <TableHead className="hidden lg:table-cell">Email</TableHead>
-                      <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
-                      <TableHead className="hidden sm:table-cell">Ville</TableHead>
-                      <TableHead>Statut</TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredContacts
-                      .filter((contact) => contact.type === "prospect")
-                      .map((contact) => (
-                        <TableRow key={contact.id}>
-                          <TableCell>
-                            <div>
-                              <div className="font-medium">{contact.name}</div>
-                              <div className="text-sm text-muted-foreground">
-                                {contact.type === "client" ? "Client" : "Prospect"}
+                    </TableBody>
+                  </Table>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="clients" className="m-0">
+                {/* Content for clients tab - identical structure but filtered */}
+                <div className="rounded-md border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nom</TableHead>
+                        <TableHead className="hidden md:table-cell">Contact</TableHead>
+                        <TableHead className="hidden lg:table-cell">Email</TableHead>
+                        <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
+                        <TableHead className="hidden sm:table-cell">Ville</TableHead>
+                        <TableHead>Statut</TableHead>
+                        <TableHead></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredContacts
+                        .filter((contact) => contact.type === "client")
+                        .map((contact) => (
+                          <TableRow key={contact.id}>
+                            <TableCell>
+                              <div>
+                                <div className="font-medium">{contact.name}</div>
+                                <div className="text-sm text-muted-foreground">
+                                  {contact.type === "client" ? "Client" : "Prospect"}
+                                </div>
                               </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">{contact.contact}</TableCell>
-                          <TableCell className="hidden lg:table-cell">{contact.email}</TableCell>
-                          <TableCell className="hidden xl:table-cell">{contact.phone}</TableCell>
-                          <TableCell className="hidden sm:table-cell">{contact.city}</TableCell>
-                          <TableCell>
-                            <Badge
-                              variant="outline"
-                              className={getStatusBadgeClass(contact.status)}
-                            >
-                              {getStatusLabel(contact.status)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2 justify-end">
-                              <Button size="icon" variant="ghost">
-                                <Mail className="h-4 w-4" />
-                              </Button>
-                              <Button size="icon" variant="ghost">
-                                <Phone className="h-4 w-4" />
-                              </Button>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button size="icon" variant="ghost">
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem>Voir les détails</DropdownMenuItem>
-                                  <DropdownMenuItem>Éditer</DropdownMenuItem>
-                                  <DropdownMenuItem>Créer un devis</DropdownMenuItem>
-                                  <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">{contact.contact}</TableCell>
+                            <TableCell className="hidden lg:table-cell">{contact.email}</TableCell>
+                            <TableCell className="hidden xl:table-cell">{contact.phone}</TableCell>
+                            <TableCell className="hidden sm:table-cell">{contact.city}</TableCell>
+                            <TableCell>
+                              <Badge
+                                variant="outline"
+                                className={getStatusBadgeClass(contact.status)}
+                              >
+                                {getStatusLabel(contact.status)}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2 justify-end">
+                                <Button size="icon" variant="ghost">
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                                <Button size="icon" variant="ghost">
+                                  <Phone className="h-4 w-4" />
+                                </Button>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button size="icon" variant="ghost">
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>Voir les détails</DropdownMenuItem>
+                                    <DropdownMenuItem>Éditer</DropdownMenuItem>
+                                    <DropdownMenuItem>Créer un devis</DropdownMenuItem>
+                                    <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="prospects" className="m-0">
+                {/* Content for prospects tab - identical structure but filtered */}
+                <div className="rounded-md border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nom</TableHead>
+                        <TableHead className="hidden md:table-cell">Contact</TableHead>
+                        <TableHead className="hidden lg:table-cell">Email</TableHead>
+                        <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
+                        <TableHead className="hidden sm:table-cell">Ville</TableHead>
+                        <TableHead>Statut</TableHead>
+                        <TableHead></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredContacts
+                        .filter((contact) => contact.type === "prospect")
+                        .map((contact) => (
+                          <TableRow key={contact.id}>
+                            <TableCell>
+                              <div>
+                                <div className="font-medium">{contact.name}</div>
+                                <div className="text-sm text-muted-foreground">
+                                  {contact.type === "client" ? "Client" : "Prospect"}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">{contact.contact}</TableCell>
+                            <TableCell className="hidden lg:table-cell">{contact.email}</TableCell>
+                            <TableCell className="hidden xl:table-cell">{contact.phone}</TableCell>
+                            <TableCell className="hidden sm:table-cell">{contact.city}</TableCell>
+                            <TableCell>
+                              <Badge
+                                variant="outline"
+                                className={getStatusBadgeClass(contact.status)}
+                              >
+                                {getStatusLabel(contact.status)}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2 justify-end">
+                                <Button size="icon" variant="ghost">
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                                <Button size="icon" variant="ghost">
+                                  <Phone className="h-4 w-4" />
+                                </Button>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button size="icon" variant="ghost">
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>Voir les détails</DropdownMenuItem>
+                                    <DropdownMenuItem>Éditer</DropdownMenuItem>
+                                    <DropdownMenuItem>Créer un devis</DropdownMenuItem>
+                                    <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      )}
+
+      {viewMode === "social" && (
+        <div className="grid gap-6 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <SocialMediaLeads onSelectLead={setSelectedLead} />
+          </div>
+          <div className="md:col-span-7">
+            {selectedLead ? (
+              <LeadDetails lead={selectedLead} />
+            ) : (
+              <Card className="h-full flex items-center justify-center">
+                <CardContent className="text-center p-10">
+                  <MessageSquare className="h-16 w-16 mx-auto text-muted-foreground/50" />
+                  <h3 className="text-xl font-medium mt-4">Aucun lead sélectionné</h3>
+                  <p className="text-muted-foreground mt-2">
+                    Sélectionnez un lead dans la liste pour voir les détails et converser.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

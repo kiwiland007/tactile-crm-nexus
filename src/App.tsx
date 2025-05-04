@@ -10,6 +10,8 @@ import Contacts from "./pages/Contacts";
 import Inventory from "./pages/Inventory";
 import Events from "./pages/Events";
 import Invoices from "./pages/Invoices";
+import Orders from "./pages/Orders";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +29,10 @@ const App = () => (
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/events" element={<Events />} />
             <Route path="/invoices" element={<Invoices />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/chat" element={<NotFound />} />
+            <Route path="/support" element={<NotFound />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

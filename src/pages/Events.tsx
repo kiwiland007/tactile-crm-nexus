@@ -21,7 +21,7 @@ import {
 import { 
   Check,
   Clock,
-  DotsVertical,
+  MoreVertical,
   Plus,
   MapPin,
   Users,
@@ -326,7 +326,7 @@ const Events = () => {
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button size="icon" variant="ghost">
-                                <DotsVertical className="h-4 w-4" />
+                                <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">

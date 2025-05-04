@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { 
-  DotsVertical,
+  MoreVertical,
   Filter, 
   Plus, 
   QrCode,
@@ -321,7 +321,7 @@ const Inventory = () => {
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button size="icon" variant="ghost">
-                                <DotsVertical className="h-4 w-4" />
+                                <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">

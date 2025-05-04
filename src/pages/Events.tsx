@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { 
   Check,
   Clock,
@@ -25,6 +32,8 @@ import {
   MapPin,
   Users,
 } from "lucide-react";
+import EquipmentReservation from "@/components/events/EquipmentReservation";
+import TechnicianTracking from "@/components/events/TechnicianTracking";
 
 // Mock data for events
 const events = [
@@ -163,6 +172,7 @@ const getEventTypeBadge = (type: string) => {
 const Events = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [visibleEvents, setVisibleEvents] = useState(events);
+  const [activeTab, setActiveTab] = useState("planning");
   
   // Get dates with events for calendar highlighting
   const eventDates = events.map((event) => event.date);
@@ -208,155 +218,178 @@ const Events = () => {
         </Button>
       </div>
       
-      <div className="grid gap-6 md:grid-cols-12">
-        <Card className="md:col-span-4">
-          <CardHeader>
-            <CardTitle>Calendrier</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={handleDateSelect}
-              className="border rounded-md"
-              modifiers={{
-                event: eventDates,
-              }}
-              modifiersStyles={{
-                event: { 
-                  fontWeight: "bold",
-                  backgroundColor: "hsl(var(--primary) / 0.1)",
-                  color: "hsl(var(--primary))",
-                  borderRadius: "0.25rem" 
-                }
-              }}
-            />
-            
-            <div className="mt-4">
-              <h3 className="text-sm font-medium mb-2">Événements à venir</h3>
-              <div className="space-y-2">
-                {events.slice(0, 3).map((event) => (
-                  <Button
-                    key={event.id}
-                    variant="outline"
-                    className="w-full justify-start text-left h-auto py-2"
-                    onClick={() => handleDateSelect(event.date)}
-                  >
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium truncate">{event.title}</span>
-                      </div>
-                      <div className="flex items-center text-xs text-muted-foreground gap-1 mt-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{formatDate(event.date)}</span>
-                      </div>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="planning" onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-4 w-full md:w-auto">
+          <TabsTrigger value="planning">Planning</TabsTrigger>
+          <TabsTrigger value="equipment">Équipements</TabsTrigger>
+          <TabsTrigger value="technicians">Techniciens</TabsTrigger>
+          <TabsTrigger value="checklist">Checklists</TabsTrigger>
+        </TabsList>
         
-        <Card className="md:col-span-8">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>
-              {selectedDate
-                ? `Événements du ${formatDate(selectedDate)}`
-                : "Tous les événements"}
-            </CardTitle>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Filtres
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setVisibleEvents(events)}>
-                  Tous les types
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setVisibleEvents(events.filter(e => e.type === "installation"))}>
-                  Installations
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setVisibleEvents(events.filter(e => e.type === "maintenance"))}>
-                  Maintenances
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setVisibleEvents(events.filter(e => e.type === "event"))}>
-                  Événements
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </CardHeader>
-          <CardContent>
-            {visibleEvents.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-64 text-center">
-                <p className="text-muted-foreground mb-4">
-                  Aucun événement prévu à cette date
-                </p>
-                <Button variant="outline" onClick={() => handleDateSelect(undefined)}>
-                  Voir tous les événements
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {visibleEvents.map((event) => (
-                  <Card key={event.id} className="overflow-hidden">
-                    <div className="border-l-4 border-tactile p-4">
-                      <div className="flex justify-between items-start">
+        <TabsContent value="planning" className="mt-6">
+          <div className="grid gap-6 md:grid-cols-12">
+            <Card className="md:col-span-4">
+              <CardHeader>
+                <CardTitle>Calendrier</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDateSelect}
+                  className="border rounded-md"
+                  modifiers={{
+                    event: eventDates,
+                  }}
+                  modifiersStyles={{
+                    event: { 
+                      fontWeight: "bold",
+                      backgroundColor: "hsl(var(--primary) / 0.1)",
+                      color: "hsl(var(--primary))",
+                      borderRadius: "0.25rem" 
+                    }
+                  }}
+                />
+                
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium mb-2">Événements à venir</h3>
+                  <div className="space-y-2">
+                    {events.slice(0, 3).map((event) => (
+                      <Button
+                        key={event.id}
+                        variant="outline"
+                        className="w-full justify-start text-left h-auto py-2"
+                        onClick={() => handleDateSelect(event.date)}
+                      >
                         <div>
-                          <h3 className="font-medium">{event.title}</h3>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <Clock className="mr-1 h-4 w-4" />
-                              {formatDate(event.date)}
-                            </div>
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <MapPin className="mr-1 h-4 w-4" />
-                              {event.location}
-                            </div>
-                            <div className="flex items-center text-sm text-muted-foreground">
-                              <Users className="mr-1 h-4 w-4" />
-                              {event.technicians.length} technicien(s)
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium truncate">{event.title}</span>
+                          </div>
+                          <div className="flex items-center text-xs text-muted-foreground gap-1 mt-1">
+                            <Clock className="h-3 w-3" />
+                            <span>{formatDate(event.date)}</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          {getEventTypeBadge(event.type)}
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="icon" variant="ghost">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Voir détails</DropdownMenuItem>
-                              <DropdownMenuItem>Modifier</DropdownMenuItem>
-                              <DropdownMenuItem>Imprimer fiche</DropdownMenuItem>
-                              <DropdownMenuItem>Annuler</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="md:col-span-8">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>
+                  {selectedDate
+                    ? `Événements du ${formatDate(selectedDate)}`
+                    : "Tous les événements"}
+                </CardTitle>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      Filtres
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setVisibleEvents(events)}>
+                      Tous les types
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setVisibleEvents(events.filter(e => e.type === "installation"))}>
+                      Installations
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setVisibleEvents(events.filter(e => e.type === "maintenance"))}>
+                      Maintenances
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setVisibleEvents(events.filter(e => e.type === "event"))}>
+                      Événements
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CardHeader>
+              <CardContent>
+                {visibleEvents.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-64 text-center">
+                    <p className="text-muted-foreground mb-4">
+                      Aucun événement prévu à cette date
+                    </p>
+                    <Button variant="outline" onClick={() => handleDateSelect(undefined)}>
+                      Voir tous les événements
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {visibleEvents.map((event) => (
+                      <Card key={event.id} className="overflow-hidden">
+                        <div className="border-l-4 border-tactile p-4">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h3 className="font-medium">{event.title}</h3>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                <div className="flex items-center text-sm text-muted-foreground">
+                                  <Clock className="mr-1 h-4 w-4" />
+                                  {formatDate(event.date)}
+                                </div>
+                                <div className="flex items-center text-sm text-muted-foreground">
+                                  <MapPin className="mr-1 h-4 w-4" />
+                                  {event.location}
+                                </div>
+                                <div className="flex items-center text-sm text-muted-foreground">
+                                  <Users className="mr-1 h-4 w-4" />
+                                  {event.technicians.length} technicien(s)
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {getEventTypeBadge(event.type)}
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button size="icon" variant="ghost">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>Voir détails</DropdownMenuItem>
+                                  <DropdownMenuItem>Modifier</DropdownMenuItem>
+                                  <DropdownMenuItem>Imprimer fiche</DropdownMenuItem>
+                                  <DropdownMenuItem>Annuler</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-3 pt-3 border-t text-sm">
+                            <h4 className="font-medium mb-1">Équipement requis</h4>
+                            <ul className="space-y-1">
+                              {event.equipments.map((eq, index) => (
+                                <li key={index} className="flex items-center gap-2">
+                                  <Check className="h-3 w-3 text-green-500" />
+                                  {eq.quantity} x {eq.name}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="mt-3 pt-3 border-t text-sm">
-                        <h4 className="font-medium mb-1">Équipement requis</h4>
-                        <ul className="space-y-1">
-                          {event.equipments.map((eq, index) => (
-                            <li key={index} className="flex items-center gap-2">
-                              <Check className="h-3 w-3 text-green-500" />
-                              {eq.quantity} x {eq.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="equipment" className="mt-6">
+          <EquipmentReservation />
+        </TabsContent>
+        
+        <TabsContent value="technicians" className="mt-6">
+          <TechnicianTracking />
+        </TabsContent>
+        
+        <TabsContent value="checklist" className="mt-6">
+          <TechnicianTracking />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

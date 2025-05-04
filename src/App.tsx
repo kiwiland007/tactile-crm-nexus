@@ -12,6 +12,7 @@ import Events from "./pages/Events";
 import Invoices from "./pages/Invoices";
 import Orders from "./pages/Orders";
 import Admin from "./pages/Admin";
+import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,7 +32,7 @@ const App = () => (
             <Route path="/invoices" element={<Invoices />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/chat" element={<NotFound />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/support" element={<NotFound />} />
           </Route>
           <Route path="*" element={<NotFound />} />

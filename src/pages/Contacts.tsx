@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Table, 
@@ -307,8 +306,68 @@ const Contacts = () => {
               {/* Content for clients tab - identical structure but filtered */}
               <div className="rounded-md border overflow-hidden">
                 <Table>
-                  {/* Same table structure as "all" tab */}
-                  {/* ... */}
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nom</TableHead>
+                      <TableHead className="hidden md:table-cell">Contact</TableHead>
+                      <TableHead className="hidden lg:table-cell">Email</TableHead>
+                      <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
+                      <TableHead className="hidden sm:table-cell">Ville</TableHead>
+                      <TableHead>Statut</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredContacts
+                      .filter((contact) => contact.type === "client")
+                      .map((contact) => (
+                        <TableRow key={contact.id}>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">{contact.name}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {contact.type === "client" ? "Client" : "Prospect"}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">{contact.contact}</TableCell>
+                          <TableCell className="hidden lg:table-cell">{contact.email}</TableCell>
+                          <TableCell className="hidden xl:table-cell">{contact.phone}</TableCell>
+                          <TableCell className="hidden sm:table-cell">{contact.city}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className={getStatusBadgeClass(contact.status)}
+                            >
+                              {getStatusLabel(contact.status)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2 justify-end">
+                              <Button size="icon" variant="ghost">
+                                <Mail className="h-4 w-4" />
+                              </Button>
+                              <Button size="icon" variant="ghost">
+                                <Phone className="h-4 w-4" />
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button size="icon" variant="ghost">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>Voir les détails</DropdownMenuItem>
+                                  <DropdownMenuItem>Éditer</DropdownMenuItem>
+                                  <DropdownMenuItem>Créer un devis</DropdownMenuItem>
+                                  <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
                 </Table>
               </div>
             </TabsContent>
@@ -317,8 +376,68 @@ const Contacts = () => {
               {/* Content for prospects tab - identical structure but filtered */}
               <div className="rounded-md border overflow-hidden">
                 <Table>
-                  {/* Same table structure as "all" tab */}
-                  {/* ... */}
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nom</TableHead>
+                      <TableHead className="hidden md:table-cell">Contact</TableHead>
+                      <TableHead className="hidden lg:table-cell">Email</TableHead>
+                      <TableHead className="hidden xl:table-cell">Téléphone</TableHead>
+                      <TableHead className="hidden sm:table-cell">Ville</TableHead>
+                      <TableHead>Statut</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredContacts
+                      .filter((contact) => contact.type === "prospect")
+                      .map((contact) => (
+                        <TableRow key={contact.id}>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">{contact.name}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {contact.type === "client" ? "Client" : "Prospect"}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">{contact.contact}</TableCell>
+                          <TableCell className="hidden lg:table-cell">{contact.email}</TableCell>
+                          <TableCell className="hidden xl:table-cell">{contact.phone}</TableCell>
+                          <TableCell className="hidden sm:table-cell">{contact.city}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className={getStatusBadgeClass(contact.status)}
+                            >
+                              {getStatusLabel(contact.status)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2 justify-end">
+                              <Button size="icon" variant="ghost">
+                                <Mail className="h-4 w-4" />
+                              </Button>
+                              <Button size="icon" variant="ghost">
+                                <Phone className="h-4 w-4" />
+                              </Button>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button size="icon" variant="ghost">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>Voir les détails</DropdownMenuItem>
+                                  <DropdownMenuItem>Éditer</DropdownMenuItem>
+                                  <DropdownMenuItem>Créer un devis</DropdownMenuItem>
+                                  <DropdownMenuItem className="text-red-600">Supprimer</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
                 </Table>
               </div>
             </TabsContent>

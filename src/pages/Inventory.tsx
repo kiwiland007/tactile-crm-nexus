@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Table, 
@@ -340,15 +339,183 @@ const Inventory = () => {
             </TabsContent>
             
             <TabsContent value="available" className="m-0">
-              {/* Same table structure but filtered */}
+              <div className="rounded-md border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Produit</TableHead>
+                      <TableHead className="hidden md:table-cell">Référence</TableHead>
+                      <TableHead className="hidden lg:table-cell">Catégorie</TableHead>
+                      <TableHead>Stock</TableHead>
+                      <TableHead className="hidden xl:table-cell">Prix Vente</TableHead>
+                      <TableHead className="hidden sm:table-cell">Prix Location</TableHead>
+                      <TableHead>Statut</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredItems
+                      .filter(item => item.quantity > 0 && item.status !== "maintenance")
+                      .map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">{item.name}</div>
+                              <div className="text-sm text-muted-foreground md:hidden">
+                                {item.reference}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            {item.reference}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">{item.category}</TableCell>
+                          <TableCell>{item.quantity}</TableCell>
+                          <TableCell className="hidden xl:table-cell">{formatPrice(item.salePrice)}</TableCell>
+                          <TableCell className="hidden sm:table-cell">{formatPrice(item.rentalPrice)}/jour</TableCell>
+                          <TableCell>
+                            {getStatusBadge(item.status, item.quantity, item.critical)}
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="icon" variant="ghost">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>Voir détails</DropdownMenuItem>
+                                <DropdownMenuItem>Modifier</DropdownMenuItem>
+                                <DropdownMenuItem>Générer QR Code</DropdownMenuItem>
+                                <DropdownMenuItem>Historique</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </TabsContent>
             
             <TabsContent value="critical" className="m-0">
-              {/* Same table structure but filtered */}
+              <div className="rounded-md border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Produit</TableHead>
+                      <TableHead className="hidden md:table-cell">Référence</TableHead>
+                      <TableHead className="hidden lg:table-cell">Catégorie</TableHead>
+                      <TableHead>Stock</TableHead>
+                      <TableHead className="hidden xl:table-cell">Prix Vente</TableHead>
+                      <TableHead className="hidden sm:table-cell">Prix Location</TableHead>
+                      <TableHead>Statut</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredItems
+                      .filter(item => item.quantity <= item.critical)
+                      .map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">{item.name}</div>
+                              <div className="text-sm text-muted-foreground md:hidden">
+                                {item.reference}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            {item.reference}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">{item.category}</TableCell>
+                          <TableCell>{item.quantity}</TableCell>
+                          <TableCell className="hidden xl:table-cell">{formatPrice(item.salePrice)}</TableCell>
+                          <TableCell className="hidden sm:table-cell">{formatPrice(item.rentalPrice)}/jour</TableCell>
+                          <TableCell>
+                            {getStatusBadge(item.status, item.quantity, item.critical)}
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="icon" variant="ghost">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>Voir détails</DropdownMenuItem>
+                                <DropdownMenuItem>Modifier</DropdownMenuItem>
+                                <DropdownMenuItem>Générer QR Code</DropdownMenuItem>
+                                <DropdownMenuItem>Historique</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </TabsContent>
             
             <TabsContent value="maintenance" className="m-0">
-              {/* Same table structure but filtered */}
+              <div className="rounded-md border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Produit</TableHead>
+                      <TableHead className="hidden md:table-cell">Référence</TableHead>
+                      <TableHead className="hidden lg:table-cell">Catégorie</TableHead>
+                      <TableHead>Stock</TableHead>
+                      <TableHead className="hidden xl:table-cell">Prix Vente</TableHead>
+                      <TableHead className="hidden sm:table-cell">Prix Location</TableHead>
+                      <TableHead>Statut</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredItems
+                      .filter(item => item.status === "maintenance")
+                      .map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">{item.name}</div>
+                              <div className="text-sm text-muted-foreground md:hidden">
+                                {item.reference}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            {item.reference}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">{item.category}</TableCell>
+                          <TableCell>{item.quantity}</TableCell>
+                          <TableCell className="hidden xl:table-cell">{formatPrice(item.salePrice)}</TableCell>
+                          <TableCell className="hidden sm:table-cell">{formatPrice(item.rentalPrice)}/jour</TableCell>
+                          <TableCell>
+                            {getStatusBadge(item.status, item.quantity, item.critical)}
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="icon" variant="ghost">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem>Voir détails</DropdownMenuItem>
+                                <DropdownMenuItem>Modifier</DropdownMenuItem>
+                                <DropdownMenuItem>Générer QR Code</DropdownMenuItem>
+                                <DropdownMenuItem>Historique</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>
